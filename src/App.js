@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import Frase from './components/Frase';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App(){
+
+  const [frase, setFrase] = useState({});
+
+  
+
+  const consultarAPI = async () => {
+    const url = 'https://breaking-bad-quotes.herokuapp.com/v1/quotes';
+    const resultado =  await axios(url)
+
+    setFrase(resultado.data[0]);
+  }
+
+  //llamando a la API siempre que el componente se monta (renderiza)
+  useEffect( () =>{
+    consultarAPI();
+  }, [] );
+
+  console.log(frase);
+
+  return(
+    <div className="contenedor">
+      <Frase 
+        frase={frase}
+      />
+      
+      <button onClick={consultarAPI}>
+        Generate a new quote
+      </button>
+    </div>  
+  )
 }
 
 export default App;
